@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="PawCare">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF8C42"/>
+      <stop offset="100%" stop-color="#FFE66D"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="9" fill="url(#bg)"/>
+  <g fill="#2D3436">
+    <ellipse cx="16" cy="21.5" rx="5" ry="4"/>
+    <circle cx="10.5" cy="13.5" r="2.6"/>
+    <circle cx="16" cy="11.5" r="2.6"/>
+    <circle cx="21.5" cy="13.5" r="2.6"/>
+    <circle cx="23.5" cy="17.5" r="2.2"/>
+    <circle cx="8.5" cy="17.5" r="2.2"/>
+  </g>
+</svg>

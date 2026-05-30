@@ -11,6 +11,7 @@
     "postinstall": "prisma generate",
     "db:generate": "prisma generate",
     "db:push": "sh -c 'set -a && if [ -f .env.local ]; then . ./.env.local; elif [ -f .env ]; then . ./.env; fi; set +a && prisma db push'",
+    "db:seed": "sh -c 'set -a && if [ -f .env.local ]; then . ./.env.local; elif [ -f .env ]; then . ./.env; fi; set +a && node prisma/seed.mjs'",
     "db:studio": "sh -c 'set -a && if [ -f .env.local ]; then . ./.env.local; elif [ -f .env ]; then . ./.env; fi; set +a && prisma studio'"
   },
   "dependencies": {

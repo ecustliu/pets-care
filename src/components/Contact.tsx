@@ -3,10 +3,12 @@
 import { FormEvent, useEffect, useState } from "react";
 import FadeIn from "@/components/FadeIn";
 import StoreMap from "@/components/StoreMap";
-import { contactInfo, petTypes, serviceOptions } from "@/data/site";
+import { contactInfo, petTypes } from "@/data/site";
+import type { ServicePackage } from "@/types/service-package";
+import { servicePackageOptions } from "@/types/service-package";
 
 type ContactProps = {
-  selectedService: string;
+  selectedPackage: ServicePackage | "";
 };
 
 type BookingForm = {
@@ -14,7 +16,7 @@ type BookingForm = {
   phone: string;
   petName: string;
   petType: string;
-  service: string;
+  packageType: ServicePackage | "";
   date: string;
   time: string;
   notes: string;
@@ -36,7 +38,7 @@ function getDefaultBookingDateTime() {
   };
 }
 
-export default function Contact({ selectedService }: ContactProps) {
+export default function Contact({ selectedPackage }: ContactProps) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -47,7 +49,7 @@ export default function Contact({ selectedService }: ContactProps) {
       phone: "",
       petName: "",
       petType: "",
-      service: selectedService,
+      packageType: selectedPackage,
       date,
       time,
       notes: "",
@@ -55,10 +57,10 @@ export default function Contact({ selectedService }: ContactProps) {
   });
 
   useEffect(() => {
-    if (selectedService) {
-      setForm((prev) => ({ ...prev, service: selectedService }));
+    if (selectedPackage) {
+      setForm((prev) => ({ ...prev, packageType: selectedPackage }));
     }
-  }, [selectedService]);
+  }, [selectedPackage]);
 
   const today = formatLocalDate(new Date());
 
@@ -178,15 +180,17 @@ export default function Contact({ selectedService }: ContactProps) {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label htmlFor="service">预约服务</label>
+                  <label htmlFor="packageType">预约服务</label>
                   <select
-                    id="service"
+                    id="packageType"
                     required
-                    value={form.service}
-                    onChange={(e) => setForm({ ...form, service: e.target.value })}
+                    value={form.packageType}
+                    onChange={(e) =>
+                      setForm({ ...form, packageType: e.target.value as ServicePackage })
+                    }
                   >
                     <option value="">请选择服务套餐</option>
-                    {serviceOptions.map((option) => (
+                    {servicePackageOptions.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
                       </option>

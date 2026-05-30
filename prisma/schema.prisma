@@ -13,7 +13,7 @@ model Booking {
   phone     String
   petName   String
   petType   String
-  service   String
+  packageType String
   date      String
   time      String
   notes     String   @default("")
@@ -22,4 +22,23 @@ model Booking {
 
   @@index([createdAt])
   @@index([date, time])
+}
+
+model Review {
+  id            String   @id @default(uuid())
+  authorName    String
+  petInfo       String
+  avatar        String   @default("🐾")
+  stars         Int
+  content       String
+  packageType   String?
+  petType       String?
+  status        String   @default("pending")
+  featured      Boolean  @default(false)
+  featuredOrder Int      @default(0)
+  bookingId     String?  @unique
+  createdAt     DateTime @default(now())
+
+  @@index([status, featured, featuredOrder])
+  @@index([createdAt])
 }

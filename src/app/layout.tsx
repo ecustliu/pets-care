@@ -12,6 +12,10 @@ export const metadata: Metadata = {
   title: "PawCare · 专业宠物洗护",
   description:
     "PawCare 专业宠物洗护服务，提供基础洗护、造型修剪、SPA 护理、上门服务等一站式宠物美容方案。",
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/apple-icon.svg", type: "image/svg+xml" }],
+  },
 };
 
 export default function RootLayout({

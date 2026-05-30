@@ -2,14 +2,15 @@
 
 import FadeIn from "@/components/FadeIn";
 import { pricingPlans } from "@/data/site";
+import type { ServicePackage } from "@/types/service-package";
 
 type PricingProps = {
-  onSelectPlan: (plan: string) => void;
+  onSelectPlan: (pkg: ServicePackage) => void;
 };
 
 export default function Pricing({ onSelectPlan }: PricingProps) {
-  const handleSelect = (plan: string) => {
-    onSelectPlan(plan);
+  const handleSelect = (pkg: ServicePackage) => {
+    onSelectPlan(pkg);
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -43,7 +44,7 @@ export default function Pricing({ onSelectPlan }: PricingProps) {
               <button
                 type="button"
                 className={`btn ${plan.featured ? "btn-primary" : "btn-outline"}`}
-                onClick={() => handleSelect(plan.name)}
+                onClick={() => handleSelect(plan.package)}
               >
                 选择套餐
               </button>

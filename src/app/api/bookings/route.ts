@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import type { BookingPayload, BookingRecord } from "@/types/booking";
-import { petTypes, serviceOptions } from "@/data/site";
+import { petTypes } from "@/data/site";
+import { isServicePackage } from "@/types/service-package";
 
 function serializeBooking(booking: {
   id: string;
@@ -9,7 +10,7 @@ function serializeBooking(booking: {
   phone: string;
   petName: string;
   petType: string;
-  service: string;
+  packageType: string;
   date: string;
   time: string;
   notes: string;
@@ -21,7 +22,7 @@ function serializeBooking(booking: {
     phone: booking.phone,
     petName: booking.petName,
     petType: booking.petType,
-    service: booking.service,
+    packageType: booking.packageType as BookingRecord["packageType"],
     date: booking.date,
     time: booking.time,
     notes: booking.notes,
@@ -36,8 +37,8 @@ function validateBooking(body: Partial<BookingPayload>): string | null {
   if (!body.petType || !petTypes.includes(body.petType as (typeof petTypes)[number])) {
     return "请选择宠物类型";
   }
-  if (!body.service || !serviceOptions.some((option) => option.value === body.service)) {
-    return "请选择预约服务";
+  if (!body.packageType || !isServicePackage(body.packageType)) {
+    return "请选择预约服务套餐";
   }
   if (!body.date) return "请选择期望日期";
   if (!body.time || !/^([01]\d|2[0-3]):[0-5]\d$/.test(body.time)) return "请选择具体时间";
@@ -103,7 +104,7 @@ export async function POST(request: Request) {
         phone: body.phone!.trim(),
         petName: body.petName!.trim(),
         petType: body.petType!,
-        service: body.service!,
+        packageType: body.packageType!,
         date: body.date!,
         time: body.time!,
         notes: body.notes?.trim() || "",

@@ -1,20 +1,41 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import FadeIn from "@/components/FadeIn";
-import { reviews } from "@/data/site";
+import ReviewForm from "@/components/ReviewForm";
+import { reviews as fallbackReviews } from "@/data/site";
+import type { ReviewDisplay } from "@/types/review";
+import { toReviewDisplay, toReviewDisplayFromStatic } from "@/types/review";
 
 const AUTO_PLAY_MS = 5000;
 const VISIBLE_COUNT = 3;
-const PAGE_COUNT = Math.ceil(reviews.length / VISIBLE_COUNT);
+
+const fallbackDisplay: ReviewDisplay[] = fallbackReviews.map(toReviewDisplayFromStatic);
 
 export default function Reviews() {
+  const [reviews, setReviews] = useState<ReviewDisplay[]>(fallbackDisplay);
   const [page, setPage] = useState(0);
   const [paused, setPaused] = useState(false);
 
-  const goTo = useCallback((next: number) => {
-    setPage((next + PAGE_COUNT) % PAGE_COUNT);
+  useEffect(() => {
+    fetch("/api/reviews?featured=true&limit=15")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.reviews?.length) {
+          setReviews(data.reviews.map(toReviewDisplay));
+        }
+      })
+      .catch(() => {});
   }, []);
+
+  const pageCount = Math.max(1, Math.ceil(reviews.length / VISIBLE_COUNT));
+
+  const goTo = useCallback(
+    (next: number) => {
+      setPage((next + pageCount) % pageCount);
+    },
+    [pageCount],
+  );
 
   const goPrev = useCallback(() => goTo(page - 1), [goTo, page]);
   const goNext = useCallback(() => goTo(page + 1), [goTo, page]);
@@ -25,7 +46,16 @@ export default function Reviews() {
     return () => clearInterval(timer);
   }, [paused, page, goTo]);
 
-  const visible = reviews.slice(page * VISIBLE_COUNT, page * VISIBLE_COUNT + VISIBLE_COUNT);
+  useEffect(() => {
+    if (page >= pageCount) {
+      setPage(0);
+    }
+  }, [page, pageCount]);
+
+  const visible = useMemo(
+    () => reviews.slice(page * VISIBLE_COUNT, page * VISIBLE_COUNT + VISIBLE_COUNT),
+    [reviews, page],
+  );
 
   return (
     <section id="reviews">
@@ -54,7 +84,7 @@ export default function Reviews() {
             <div className="reviews-carousel-viewport">
               <div key={page} className="reviews-carousel-track">
                 {visible.map((review) => (
-                  <article key={review.author} className="review-card">
+                  <article key={review.id} className="review-card">
                     <div className="review-stars">{"★".repeat(review.stars)}</div>
                     <blockquote>{review.quote}</blockquote>
                     <div className="review-author">
@@ -79,7 +109,7 @@ export default function Reviews() {
             </button>
 
             <div className="reviews-carousel-dots" role="tablist" aria-label="评价切换">
-              {Array.from({ length: PAGE_COUNT }, (_, i) => (
+              {Array.from({ length: pageCount }, (_, i) => (
                 <button
                   key={i}
                   type="button"
@@ -93,6 +123,8 @@ export default function Reviews() {
             </div>
           </div>
         </FadeIn>
+
+        <ReviewForm />
       </div>
     </section>
   );

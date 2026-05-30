@@ -1,3 +1,5 @@
+import { ServicePackage } from "@/types/service-package";
+
 export const navLinks = [
   { href: "#services", label: "服务项目" },
   { href: "#process", label: "洗护流程" },
@@ -56,6 +58,7 @@ export const pricingPlans = [
   {
     tag: "基础版",
     name: "清爽洗护",
+    package: ServicePackage.REFRESHING,
     description: "适合日常清洁护理",
     price: 68,
     featured: false,
@@ -64,6 +67,7 @@ export const pricingPlans = [
   {
     tag: "最受欢迎",
     name: "精致护理",
+    package: ServicePackage.PREMIUM,
     description: "洗护 + 造型一站式",
     price: 168,
     featured: true,
@@ -79,6 +83,7 @@ export const pricingPlans = [
   {
     tag: "尊享版",
     name: "皇家 SPA",
+    package: ServicePackage.ROYAL_SPA,
     description: "顶级奢华护理体验",
     price: 298,
     featured: false,
@@ -155,13 +160,6 @@ export const contactInfo = [
   { icon: "📞", title: "联系电话", content: "400-888-6666（每日 9:00 - 21:00）" },
   { icon: "💬", title: "微信咨询", content: "PawCare888 · 扫码添加客服微信" },
   { icon: "🕐", title: "营业时间", content: "周一至周日 9:00 - 21:00（节假日正常营业）" },
-] as const;
-
-export const serviceOptions = [
-  { value: "清爽洗护", label: "清爽洗护 - ¥68起" },
-  { value: "精致护理", label: "精致护理 - ¥168起" },
-  { value: "皇家 SPA", label: "皇家 SPA - ¥298起" },
-  { value: "上门洗护", label: "上门洗护 - ¥168起" },
 ] as const;
 
 export const petTypes = ["小型犬", "中型犬", "大型犬", "猫咪", "其他"] as const;
