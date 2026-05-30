@@ -6,11 +6,19 @@ import { petTypes } from "@/data/site";
 import { servicePackageOptions } from "@/types/service-package";
 import type { ServicePackage } from "@/types/service-package";
 
+const ratingOptions = [
+  { value: 1, emoji: "😢", label: "非常不满意" },
+  { value: 2, emoji: "😕", label: "不太满意" },
+  { value: 3, emoji: "😐", label: "一般" },
+  { value: 4, emoji: "😊", label: "满意" },
+  { value: 5, emoji: "🤩", label: "非常满意" },
+] as const;
+
 export default function ReviewForm() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [stars, setStars] = useState(5);
+  const [stars, setStars] = useState(0);
   const [form, setForm] = useState({
     authorName: "",
     petInfo: "",
@@ -21,8 +29,14 @@ export default function ReviewForm() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setLoading(true);
     setError("");
+
+    if (stars < 1) {
+      setError("请选择评分");
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const response = await fetch("/api/reviews", {
@@ -125,16 +139,19 @@ export default function ReviewForm() {
         </div>
         <div className="form-group">
           <label>评分</label>
-          <div className="review-star-picker" role="group" aria-label="评分">
-            {[1, 2, 3, 4, 5].map((value) => (
+          <div className="review-mood-picker" role="radiogroup" aria-label="评分">
+            {ratingOptions.map(({ value, emoji, label }) => (
               <button
                 key={value}
                 type="button"
-                className={`review-star-btn${value <= stars ? " active" : ""}`}
-                aria-label={`${value} 星`}
+                role="radio"
+                aria-checked={stars === value}
+                className={`review-mood-btn${stars === value ? " active" : ""}`}
+                aria-label={label}
+                title={label}
                 onClick={() => setStars(value)}
               >
-                ★
+                {emoji}
               </button>
             ))}
           </div>

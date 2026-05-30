@@ -836,25 +836,36 @@
       resize: vertical;
     }
 
-    .review-star-picker {
+    .review-mood-picker {
       display: flex;
-      gap: 8px;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
-    .review-star-btn {
-      border: none;
-      background: none;
-      font-size: 1.6rem;
-      color: rgba(255, 140, 66, 0.25);
+    .review-mood-btn {
+      border: 2px solid transparent;
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      font-size: 1.75rem;
       cursor: pointer;
-      padding: 0;
+      padding: 8px 14px;
       line-height: 1;
-      transition: color 0.15s, transform 0.15s;
+      opacity: 0.35;
+      filter: grayscale(0.6);
+      transition: opacity 0.15s, transform 0.15s, border-color 0.15s, filter 0.15s;
     }
 
-    .review-star-btn.active,
-    .review-star-btn:hover {
-      color: #ffd93d;
+    .review-mood-btn:hover {
+      opacity: 0.7;
+      filter: grayscale(0.2);
+      transform: scale(1.06);
+    }
+
+    .review-mood-btn.active {
+      opacity: 1;
+      filter: none;
+      border-color: var(--primary);
+      background: rgba(255, 140, 66, 0.1);
       transform: scale(1.1);
     }
 

@@ -36,7 +36,7 @@ function validateReview(body: Partial<ReviewPayload>): string | null {
     return "评价内容至少 10 个字";
   }
   if (!body.stars || body.stars < 1 || body.stars > 5) {
-    return "请选择 1-5 星评分";
+    return "请选择评分";
   }
   if (body.petType && !petTypes.includes(body.petType as (typeof petTypes)[number])) {
     return "请选择有效的宠物类型";
