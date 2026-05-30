@@ -672,6 +672,10 @@
       transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    .reviews-carousel-slider--instant {
+      transition: none;
+    }
+
     .reviews-carousel-page {
       flex: 0 0 100%;
       display: grid;

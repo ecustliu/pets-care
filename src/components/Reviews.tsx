@@ -14,7 +14,8 @@ const fallbackDisplay: ReviewDisplay[] = fallbackReviews.map(toReviewDisplayFrom
 
 export default function Reviews() {
   const [reviews, setReviews] = useState<ReviewDisplay[]>(fallbackDisplay);
-  const [page, setPage] = useState(0);
+  const [slideIndex, setSlideIndex] = useState(1);
+  const [noTransition, setNoTransition] = useState(false);
   const [paused, setPaused] = useState(false);
 
   useEffect(() => {
@@ -28,37 +29,79 @@ export default function Reviews() {
       .catch(() => {});
   }, []);
 
-  const pageCount = Math.max(1, Math.ceil(reviews.length / VISIBLE_COUNT));
-
-  const goTo = useCallback(
-    (next: number) => {
-      setPage((next + pageCount) % pageCount);
-    },
-    [pageCount],
-  );
-
-  const goPrev = useCallback(() => goTo(page - 1), [goTo, page]);
-  const goNext = useCallback(() => goTo(page + 1), [goTo, page]);
-
-  useEffect(() => {
-    if (paused) return;
-    const timer = setInterval(() => goTo(page + 1), AUTO_PLAY_MS);
-    return () => clearInterval(timer);
-  }, [paused, page, goTo]);
-
-  useEffect(() => {
-    if (page >= pageCount) {
-      setPage(0);
-    }
-  }, [page, pageCount]);
-
   const pages = useMemo(() => {
     const result: ReviewDisplay[][] = [];
+    const pageCount = Math.max(1, Math.ceil(reviews.length / VISIBLE_COUNT));
     for (let i = 0; i < pageCount; i++) {
       result.push(reviews.slice(i * VISIBLE_COUNT, i * VISIBLE_COUNT + VISIBLE_COUNT));
     }
     return result;
-  }, [reviews, pageCount]);
+  }, [reviews]);
+
+  const pageCount = pages.length;
+  const canLoop = pageCount > 1;
+
+  const extendedPages = useMemo(() => {
+    if (!canLoop) return pages;
+    return [pages[pageCount - 1], ...pages, pages[0]];
+  }, [canLoop, pageCount, pages]);
+
+  const activePage = useMemo(() => {
+    if (!canLoop) return 0;
+    if (slideIndex === 0) return pageCount - 1;
+    if (slideIndex === pageCount + 1) return 0;
+    return slideIndex - 1;
+  }, [canLoop, pageCount, slideIndex]);
+
+  useEffect(() => {
+    setSlideIndex(canLoop ? 1 : 0);
+    setNoTransition(false);
+  }, [canLoop, pageCount]);
+
+  const goNext = useCallback(() => {
+    if (!canLoop) return;
+    setSlideIndex((current) => current + 1);
+  }, [canLoop]);
+
+  const goPrev = useCallback(() => {
+    if (!canLoop) return;
+    setSlideIndex((current) => current - 1);
+  }, [canLoop]);
+
+  const goTo = useCallback(
+    (targetPage: number) => {
+      if (!canLoop) return;
+      setSlideIndex(targetPage + 1);
+    },
+    [canLoop],
+  );
+
+  useEffect(() => {
+    if (paused || !canLoop) return;
+    const timer = setInterval(goNext, AUTO_PLAY_MS);
+    return () => clearInterval(timer);
+  }, [paused, canLoop, goNext]);
+
+  const handleTransitionEnd = () => {
+    if (!canLoop) return;
+
+    if (slideIndex === 0) {
+      setNoTransition(true);
+      setSlideIndex(pageCount);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => setNoTransition(false));
+      });
+      return;
+    }
+
+    if (slideIndex === pageCount + 1) {
+      setNoTransition(true);
+      setSlideIndex(1);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => setNoTransition(false));
+      });
+    }
+  };
 
   return (
     <section id="reviews">
@@ -86,10 +129,11 @@ export default function Reviews() {
 
             <div className="reviews-carousel-viewport">
               <div
-                className="reviews-carousel-slider"
-                style={{ transform: `translateX(-${page * 100}%)` }}
+                className={`reviews-carousel-slider${noTransition ? " reviews-carousel-slider--instant" : ""}`}
+                style={{ transform: `translateX(-${slideIndex * 100}%)` }}
+                onTransitionEnd={handleTransitionEnd}
               >
-                {pages.map((pageReviews, pageIndex) => (
+                {extendedPages.map((pageReviews, pageIndex) => (
                   <div key={pageIndex} className="reviews-carousel-page">
                     {pageReviews.map((review) => (
                       <article key={review.id} className="review-card">
@@ -124,9 +168,9 @@ export default function Reviews() {
                   key={i}
                   type="button"
                   role="tab"
-                  aria-selected={i === page}
+                  aria-selected={i === activePage}
                   aria-label={`第 ${i + 1} 组评价`}
-                  className={`reviews-carousel-dot${i === page ? " active" : ""}`}
+                  className={`reviews-carousel-dot${i === activePage ? " active" : ""}`}
                   onClick={() => goTo(i)}
                 />
               ))}
