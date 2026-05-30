@@ -7,11 +7,11 @@ import { servicePackageOptions } from "@/types/service-package";
 import type { ServicePackage } from "@/types/service-package";
 
 const ratingOptions = [
-  { value: 1, emoji: "😢", label: "非常不满意" },
-  { value: 2, emoji: "😕", label: "不太满意" },
-  { value: 3, emoji: "😐", label: "一般" },
-  { value: 4, emoji: "😊", label: "满意" },
-  { value: 5, emoji: "🤩", label: "非常满意" },
+  { value: 1, emoji: "😢", label: "非常不满意", color: "#ef5350" },
+  { value: 2, emoji: "😕", label: "不太满意", color: "#ff8a65" },
+  { value: 3, emoji: "😐", label: "一般", color: "#ffca28" },
+  { value: 4, emoji: "😊", label: "满意", color: "#9ccc65" },
+  { value: 5, emoji: "🤩", label: "非常满意", color: "#66bb6a" },
 ] as const;
 
 export default function ReviewForm() {
@@ -19,6 +19,7 @@ export default function ReviewForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [stars, setStars] = useState(0);
+  const [hoveredStars, setHoveredStars] = useState(0);
   const [form, setForm] = useState({
     authorName: "",
     petInfo: "",
@@ -139,22 +140,52 @@ export default function ReviewForm() {
         </div>
         <div className="form-group">
           <label>评分</label>
-          <div className="review-mood-picker" role="radiogroup" aria-label="评分">
-            {ratingOptions.map(({ value, emoji, label }) => (
-              <button
-                key={value}
-                type="button"
-                role="radio"
-                aria-checked={stars === value}
-                className={`review-mood-btn${stars === value ? " active" : ""}`}
-                aria-label={label}
-                title={label}
-                onClick={() => setStars(value)}
-              >
-                {emoji}
-              </button>
-            ))}
-          </div>
+          {(() => {
+            const display = hoveredStars || stars;
+            const current = display ? ratingOptions[display - 1] : null;
+            return (
+              <div className="review-mood">
+                <div
+                  className="review-mood-picker"
+                  role="radiogroup"
+                  aria-label="评分"
+                  onMouseLeave={() => setHoveredStars(0)}
+                >
+                  {current && (
+                    <span
+                      className="review-mood-indicator"
+                      style={{
+                        transform: `translateX(calc(${display - 1} * (100% + 6px)))`,
+                        background: current.color,
+                      }}
+                    />
+                  )}
+                  {ratingOptions.map(({ value, emoji, label }) => (
+                    <button
+                      key={value}
+                      type="button"
+                      role="radio"
+                      aria-checked={stars === value}
+                      className={`review-mood-btn${display === value ? " active" : ""}${stars === value ? " selected" : ""}`}
+                      aria-label={label}
+                      onClick={() => setStars(value)}
+                      onMouseEnter={() => setHoveredStars(value)}
+                      onFocus={() => setHoveredStars(value)}
+                      onBlur={() => setHoveredStars(0)}
+                    >
+                      <span className="review-mood-emoji">{emoji}</span>
+                    </button>
+                  ))}
+                </div>
+                <span
+                  className={`review-mood-label${current ? " filled" : ""}`}
+                  style={current ? { color: current.color } : undefined}
+                >
+                  {current ? current.label : "点击下方表情，为本次服务打分"}
+                </span>
+              </div>
+            );
+          })()}
         </div>
         <div className="form-group">
           <label htmlFor="reviewContent">评价内容</label>
