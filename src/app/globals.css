@@ -667,22 +667,17 @@
       overflow: hidden;
     }
 
-    .reviews-carousel-track {
+    .reviews-carousel-slider {
+      display: flex;
+      transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reviews-carousel-page {
+      flex: 0 0 100%;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
-      animation: reviewSlideIn 0.45s ease;
-    }
-
-    @keyframes reviewSlideIn {
-      from {
-        opacity: 0;
-        transform: translateY(16px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      min-width: 0;
     }
 
     .review-card {
@@ -1227,7 +1222,7 @@
         grid-template-columns: 1fr;
       }
 
-      .reviews-carousel-track {
+      .reviews-carousel-page {
         grid-template-columns: 1fr;
       }
 

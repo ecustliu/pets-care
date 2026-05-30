@@ -52,10 +52,13 @@ export default function Reviews() {
     }
   }, [page, pageCount]);
 
-  const visible = useMemo(
-    () => reviews.slice(page * VISIBLE_COUNT, page * VISIBLE_COUNT + VISIBLE_COUNT),
-    [reviews, page],
-  );
+  const pages = useMemo(() => {
+    const result: ReviewDisplay[][] = [];
+    for (let i = 0; i < pageCount; i++) {
+      result.push(reviews.slice(i * VISIBLE_COUNT, i * VISIBLE_COUNT + VISIBLE_COUNT));
+    }
+    return result;
+  }, [reviews, pageCount]);
 
   return (
     <section id="reviews">
@@ -82,19 +85,26 @@ export default function Reviews() {
             </button>
 
             <div className="reviews-carousel-viewport">
-              <div key={page} className="reviews-carousel-track">
-                {visible.map((review) => (
-                  <article key={review.id} className="review-card">
-                    <div className="review-stars">{"★".repeat(review.stars)}</div>
-                    <blockquote>{review.quote}</blockquote>
-                    <div className="review-author">
-                      <div className="avatar">{review.avatar}</div>
-                      <div>
-                        <strong>{review.author}</strong>
-                        <span>{review.pet}</span>
-                      </div>
-                    </div>
-                  </article>
+              <div
+                className="reviews-carousel-slider"
+                style={{ transform: `translateX(-${page * 100}%)` }}
+              >
+                {pages.map((pageReviews, pageIndex) => (
+                  <div key={pageIndex} className="reviews-carousel-page">
+                    {pageReviews.map((review) => (
+                      <article key={review.id} className="review-card">
+                        <div className="review-stars">{"★".repeat(review.stars)}</div>
+                        <blockquote>{review.quote}</blockquote>
+                        <div className="review-author">
+                          <div className="avatar">{review.avatar}</div>
+                          <div>
+                            <strong>{review.author}</strong>
+                            <span>{review.pet}</span>
+                          </div>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
                 ))}
               </div>
             </div>
