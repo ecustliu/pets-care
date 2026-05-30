@@ -1,13 +1,3 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PawCare · 专业宠物洗护</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
     :root {
       --primary: #FF8C42;
       --primary-dark: #E6732E;
@@ -662,10 +652,37 @@
     }
 
     /* Reviews */
-    .reviews-grid {
+    .reviews-carousel {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .reviews-carousel-viewport {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .reviews-carousel-track {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
+      animation: reviewSlideIn 0.45s ease;
+    }
+
+    @keyframes reviewSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .review-card {
@@ -673,6 +690,61 @@
       border-radius: var(--radius);
       padding: 28px;
       box-shadow: var(--shadow);
+      height: 100%;
+    }
+
+    .reviews-carousel-btn {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 50%;
+      background: var(--white);
+      color: var(--primary);
+      font-size: 1.6rem;
+      line-height: 1;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+
+    .reviews-carousel-btn:hover {
+      background: var(--primary);
+      color: var(--white);
+      transform: scale(1.05);
+    }
+
+    .reviews-carousel-dots {
+      position: absolute;
+      left: 50%;
+      bottom: -36px;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+    }
+
+    .reviews-carousel-dot {
+      width: 10px;
+      height: 10px;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 140, 66, 0.25);
+      cursor: pointer;
+      transition: background 0.25s, transform 0.25s;
+    }
+
+    .reviews-carousel-dot.active {
+      background: var(--primary);
+      transform: scale(1.2);
+    }
+
+    .reviews-carousel-dot:hover {
+      background: var(--primary-dark);
+    }
+
+    #reviews .section-inner {
+      padding-bottom: 56px;
     }
 
     .review-stars {
@@ -941,8 +1013,7 @@
       }
 
       .services-grid,
-      .pricing-grid,
-      .reviews-grid {
+      .pricing-grid {
         grid-template-columns: repeat(2, 1fr);
       }
 
@@ -995,9 +1066,21 @@
 
       .services-grid,
       .pricing-grid,
-      .reviews-grid,
       .process-steps {
         grid-template-columns: 1fr;
+      }
+
+      .reviews-carousel-track {
+        grid-template-columns: 1fr;
+      }
+
+      .reviews-carousel-btn--prev,
+      .reviews-carousel-btn--next {
+        display: none;
+      }
+
+      .review-card {
+        padding: 24px 20px;
       }
 
       .form-row {
@@ -1034,469 +1117,3 @@
       opacity: 1;
       transform: translateY(0);
     }
-  </style>
-</head>
-<body>
-
-  <!-- Header -->
-  <header id="header">
-    <nav>
-      <a href="#" class="logo">
-        <div class="logo-icon">🐾</div>
-        PawCare
-      </a>
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#services">服务项目</a></li>
-        <li><a href="#process">洗护流程</a></li>
-        <li><a href="#pricing">价格套餐</a></li>
-        <li><a href="#reviews">用户评价</a></li>
-        <li><a href="#contact">预约咨询</a></li>
-      </ul>
-      <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">立即预约</button>
-      <button class="menu-toggle" id="menuToggle" aria-label="菜单">☰</button>
-    </nav>
-  </header>
-
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-inner">
-      <div class="hero-content">
-        <div class="hero-badge">🌟 全城口碑第一 · 已服务 8000+ 毛孩子</div>
-        <h1>给毛孩子<br><span>专业温柔的洗护体验</span></h1>
-        <p class="hero-desc">采用进口天然洗护产品，一对一专属服务。让每一只宠物都能享受安全、舒适、专业的洗护护理。</p>
-        <div class="hero-actions">
-          <a href="#contact" class="btn btn-primary">📅 在线预约</a>
-          <a href="#services" class="btn btn-outline">了解服务</a>
-        </div>
-        <div class="hero-stats">
-          <div class="stat-item">
-            <strong>8000+</strong>
-            <span>服务宠物</span>
-          </div>
-          <div class="stat-item">
-            <strong>4.9</strong>
-            <span>用户评分</span>
-          </div>
-          <div class="stat-item">
-            <strong>5年</strong>
-            <span>专业经验</span>
-          </div>
-        </div>
-      </div>
-      <div class="hero-visual">
-        <div class="hero-card">
-          <div class="hero-card-header">
-            <div class="pet-avatar">🐕</div>
-            <div>
-              <h3>今日预约 · 豆豆</h3>
-              <p>金毛 · 精致洗护套餐</p>
-            </div>
-          </div>
-          <div class="service-preview">
-            <div class="service-preview-item">
-              <div class="icon bath">🛁</div>
-              <div>
-                <strong>深层清洁沐浴</strong>
-                <span>约 30 分钟 · 进行中</span>
-              </div>
-            </div>
-            <div class="service-preview-item">
-              <div class="icon cut">✂️</div>
-              <div>
-                <strong>造型修剪</strong>
-                <span>约 45 分钟 · 待开始</span>
-              </div>
-            </div>
-            <div class="service-preview-item">
-              <div class="icon spa">💆</div>
-              <div>
-                <strong>SPA 护理</strong>
-                <span>约 20 分钟 · 待开始</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="floating-badge top">✨ 100% 好评</div>
-        <div class="floating-badge bottom">🏆 专业认证</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Services -->
-  <section class="services" id="services">
-    <div class="section-inner">
-      <div class="section-header fade-in">
-        <span class="section-tag">我们的服务</span>
-        <h2>全方位宠物洗护方案</h2>
-        <p>从基础清洁到高端 SPA，为不同品种、不同需求的毛孩子提供定制化护理服务</p>
-      </div>
-      <div class="services-grid">
-        <div class="service-card fade-in">
-          <div class="icon-wrap">🛁</div>
-          <h3>基础洗护</h3>
-          <p>深层清洁、吹干梳理，使用低敏天然洗护液，适合日常护理。</p>
-          <div class="price">¥68 <small>起</small></div>
-        </div>
-        <div class="service-card fade-in">
-          <div class="icon-wrap">✂️</div>
-          <h3>造型修剪</h3>
-          <p>专业美容师根据品种特点设计造型，让毛孩子焕然一新。</p>
-          <div class="price">¥128 <small>起</small></div>
-        </div>
-        <div class="service-card fade-in">
-          <div class="icon-wrap">💆</div>
-          <h3>SPA 护理</h3>
-          <p>精油按摩、毛发滋养、皮肤调理，给宠物极致放松体验。</p>
-          <div class="price">¥198 <small>起</small></div>
-        </div>
-        <div class="service-card fade-in">
-          <div class="icon-wrap">🦷</div>
-          <h3>口腔护理</h3>
-          <p>牙齿清洁、口气清新，预防牙结石，守护口腔健康。</p>
-          <div class="price">¥58 <small>起</small></div>
-        </div>
-        <div class="service-card fade-in">
-          <div class="icon-wrap">💅</div>
-          <h3>指甲修剪</h3>
-          <p>安全修剪指甲、打磨甲面，避免抓伤，呵护肉垫健康。</p>
-          <div class="price">¥38 <small>起</small></div>
-        </div>
-        <div class="service-card fade-in">
-          <div class="icon-wrap">🏠</div>
-          <h3>上门洗护</h3>
-          <p>专业团队携带设备上门，减少宠物出行应激，在家也能享受服务。</p>
-          <div class="price">¥168 <small>起</small></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Process -->
-  <section id="process">
-    <div class="section-inner">
-      <div class="section-header fade-in">
-        <span class="section-tag">洗护流程</span>
-        <h2>四步完成专业洗护</h2>
-        <p>标准化流程，确保每一只宠物都能获得安全、舒适的服务体验</p>
-      </div>
-      <div class="process-steps">
-        <div class="process-step fade-in">
-          <div class="step-number">1</div>
-          <h3>健康检查</h3>
-          <p>检查皮肤、耳朵、指甲状况，确认适合洗护</p>
-        </div>
-        <div class="process-step fade-in">
-          <div class="step-number">2</div>
-          <h3>深层清洁</h3>
-          <p>温水预洗、专业洗护液深层清洁毛发与皮肤</p>
-        </div>
-        <div class="process-step fade-in">
-          <div class="step-number">3</div>
-          <h3>护理造型</h3>
-          <p>吹干梳理、修剪造型、SPA 护理等定制服务</p>
-        </div>
-        <div class="process-step fade-in">
-          <div class="step-number">4</div>
-          <h3>完成交付</h3>
-          <p>最终检查、拍照记录，温馨送宠回家</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Pricing -->
-  <section class="pricing" id="pricing">
-    <div class="section-inner">
-      <div class="section-header fade-in">
-        <span class="section-tag">价格套餐</span>
-        <h2>选择适合的护理方案</h2>
-        <p>透明定价，无隐形消费。小型犬、中型犬、大型犬价格略有差异</p>
-      </div>
-      <div class="pricing-grid">
-        <div class="pricing-card fade-in">
-          <span class="plan-tag">基础版</span>
-          <h3>清爽洗护</h3>
-          <p class="plan-desc">适合日常清洁护理</p>
-          <div class="plan-price">¥68<span>起</span></div>
-          <p class="plan-period">小型犬参考价</p>
-          <ul class="pricing-features">
-            <li>健康检查</li>
-            <li>深层沐浴清洁</li>
-            <li>专业吹干梳理</li>
-            <li>耳朵基础清洁</li>
-            <li>指甲修剪</li>
-          </ul>
-          <button class="btn btn-outline" onclick="selectPlan('清爽洗护')">选择套餐</button>
-        </div>
-        <div class="pricing-card featured fade-in">
-          <span class="plan-tag">最受欢迎</span>
-          <h3>精致护理</h3>
-          <p class="plan-desc">洗护 + 造型一站式</p>
-          <div class="plan-price">¥168<span>起</span></div>
-          <p class="plan-period">小型犬参考价</p>
-          <ul class="pricing-features">
-            <li>包含基础版全部服务</li>
-            <li>专业造型修剪</li>
-            <li>毛发滋养护理</li>
-            <li>口腔基础清洁</li>
-            <li>香氛喷雾</li>
-            <li>免费拍照留念</li>
-          </ul>
-          <button class="btn btn-primary" onclick="selectPlan('精致护理')">选择套餐</button>
-        </div>
-        <div class="pricing-card fade-in">
-          <span class="plan-tag">尊享版</span>
-          <h3>皇家 SPA</h3>
-          <p class="plan-desc">顶级奢华护理体验</p>
-          <div class="plan-price">¥298<span>起</span></div>
-          <p class="plan-period">小型犬参考价</p>
-          <ul class="pricing-features">
-            <li>包含精致版全部服务</li>
-            <li>精油 SPA 按摩</li>
-            <li>皮肤深层调理</li>
-            <li>进口高端洗护产品</li>
-            <li>专属一对一服务</li>
-            <li>护理报告 + 照片</li>
-          </ul>
-          <button class="btn btn-outline" onclick="selectPlan('皇家 SPA')">选择套餐</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Reviews -->
-  <section id="reviews">
-    <div class="section-inner">
-      <div class="section-header fade-in">
-        <span class="section-tag">用户评价</span>
-        <h2>毛孩子家长的真实反馈</h2>
-        <p>超过 8000 位宠物主人的信赖之选</p>
-      </div>
-      <div class="reviews-grid">
-        <div class="review-card fade-in">
-          <div class="review-stars">★★★★★</div>
-          <blockquote>带我家柯基来做精致护理，美容师非常有耐心，狗狗全程都很配合。洗完美毛蓬松发亮，造型也超可爱！</blockquote>
-          <div class="review-author">
-            <div class="avatar">🐕</div>
-            <div>
-              <strong>李女士</strong>
-              <span>柯基 · 土豆</span>
-            </div>
-          </div>
-        </div>
-        <div class="review-card fade-in">
-          <div class="review-stars">★★★★★</div>
-          <blockquote>第一次带猫咪来洗护，本来很担心应激反应。工作人员专业又温柔，还用了猫咪专用的低敏产品，体验非常好。</blockquote>
-          <div class="review-author">
-            <div class="avatar">🐱</div>
-            <div>
-              <strong>张先生</strong>
-              <span>英短 · 咪咪</span>
-            </div>
-          </div>
-        </div>
-        <div class="review-card fade-in">
-          <div class="review-stars">★★★★★</div>
-          <blockquote>上门洗护太方便了！金毛体型大，出门洗澡很麻烦。师傅准时到达，设备齐全，洗完家里也收拾得很干净。</blockquote>
-          <div class="review-author">
-            <div class="avatar">🦮</div>
-            <div>
-              <strong>王小姐</strong>
-              <span>金毛 · 大黄</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contact -->
-  <section class="contact" id="contact">
-    <div class="section-inner">
-      <div class="section-header fade-in">
-        <span class="section-tag">预约咨询</span>
-        <h2>给毛孩子预约一次洗护吧</h2>
-        <p>填写表单，我们将在 30 分钟内与您联系确认预约时间</p>
-      </div>
-      <div class="contact-grid">
-        <div class="contact-info fade-in">
-          <div class="contact-item">
-            <div class="icon">📍</div>
-            <div>
-              <h4>门店地址</h4>
-              <p>北京市朝阳区宠物友好街 88 号 PawCare 旗舰店</p>
-            </div>
-          </div>
-          <div class="contact-item">
-            <div class="icon">📞</div>
-            <div>
-              <h4>联系电话</h4>
-              <p>400-888-6666（每日 9:00 - 21:00）</p>
-            </div>
-          </div>
-          <div class="contact-item">
-            <div class="icon">💬</div>
-            <div>
-              <h4>微信咨询</h4>
-              <p>PawCare888 · 扫码添加客服微信</p>
-            </div>
-          </div>
-          <div class="contact-item">
-            <div class="icon">🕐</div>
-            <div>
-              <h4>营业时间</h4>
-              <p>周一至周日 9:00 - 21:00（节假日正常营业）</p>
-            </div>
-          </div>
-        </div>
-        <div class="contact-form fade-in">
-          <form id="bookingForm">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="ownerName">您的姓名</label>
-                <input type="text" id="ownerName" placeholder="请输入姓名" required>
-              </div>
-              <div class="form-group">
-                <label for="phone">联系电话</label>
-                <input type="tel" id="phone" placeholder="请输入手机号" required>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="petName">宠物名字</label>
-                <input type="text" id="petName" placeholder="毛孩子叫什么？" required>
-              </div>
-              <div class="form-group">
-                <label for="petType">宠物类型</label>
-                <select id="petType" required>
-                  <option value="">请选择</option>
-                  <option value="小型犬">小型犬</option>
-                  <option value="中型犬">中型犬</option>
-                  <option value="大型犬">大型犬</option>
-                  <option value="猫咪">猫咪</option>
-                  <option value="其他">其他</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="service">预约服务</label>
-              <select id="service" required>
-                <option value="">请选择服务套餐</option>
-                <option value="清爽洗护">清爽洗护 - ¥68起</option>
-                <option value="精致护理">精致护理 - ¥168起</option>
-                <option value="皇家 SPA">皇家 SPA - ¥298起</option>
-                <option value="上门洗护">上门洗护 - ¥168起</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="date">期望日期</label>
-              <input type="date" id="date" required>
-            </div>
-            <div class="form-group">
-              <label for="notes">备注说明</label>
-              <textarea id="notes" placeholder="如有特殊需求或宠物注意事项，请在此说明..."></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">提交预约</button>
-          </form>
-          <div class="form-success" id="formSuccess">
-            <div class="icon">🎉</div>
-            <h3>预约提交成功！</h3>
-            <p>我们已收到您的预约信息，客服将在 30 分钟内与您联系确认。</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <div class="footer-inner">
-      <div class="footer-brand">
-        <a href="#" class="logo">
-          <div class="logo-icon">🐾</div>
-          PawCare
-        </a>
-        <p>专注宠物洗护 5 年，用专业和爱心呵护每一只毛孩子。进口天然产品，一对一专属服务。</p>
-      </div>
-      <div class="footer-col">
-        <h4>服务项目</h4>
-        <ul>
-          <li><a href="#services">基础洗护</a></li>
-          <li><a href="#services">造型修剪</a></li>
-          <li><a href="#services">SPA 护理</a></li>
-          <li><a href="#services">上门洗护</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>关于我们</h4>
-        <ul>
-          <li><a href="#">品牌故事</a></li>
-          <li><a href="#">团队介绍</a></li>
-          <li><a href="#">加入我们</a></li>
-          <li><a href="#">合作伙伴</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>帮助中心</h4>
-        <ul>
-          <li><a href="#">常见问题</a></li>
-          <li><a href="#">洗护须知</a></li>
-          <li><a href="#">取消政策</a></li>
-          <li><a href="#contact">联系我们</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 PawCare 宠物洗护. All rights reserved.</span>
-      <span>🐾 用心呵护每一只毛孩子</span>
-    </div>
-  </footer>
-
-  <script>
-    // Header scroll effect
-    const header = document.getElementById('header');
-    window.addEventListener('scroll', () => {
-      header.classList.toggle('scrolled', window.scrollY > 20);
-    });
-
-    // Mobile menu
-    const menuToggle = document.getElementById('menuToggle');
-    const navLinks = document.getElementById('navLinks');
-    menuToggle.addEventListener('click', () => {
-      navLinks.classList.toggle('open');
-    });
-    navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => navLinks.classList.remove('open'));
-    });
-
-    // Scroll animations
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-    // Set min date for booking
-    const dateInput = document.getElementById('date');
-    const today = new Date().toISOString().split('T')[0];
-    dateInput.min = today;
-
-    // Select plan from pricing
-    function selectPlan(plan) {
-      document.getElementById('service').value = plan;
-      document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // Form submission
-    document.getElementById('bookingForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      e.target.classList.add('hidden');
-      document.getElementById('formSuccess').classList.add('show');
-    });
-  </script>
-</body>
-</html>
