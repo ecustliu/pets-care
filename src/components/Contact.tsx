@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import FadeIn from "@/components/FadeIn";
+import StoreMap from "@/components/StoreMap";
 import { contactInfo, petTypes, serviceOptions } from "@/data/site";
 
 type ContactProps = {
@@ -97,15 +98,28 @@ export default function Contact({ selectedService }: ContactProps) {
         </FadeIn>
         <div className="contact-grid">
           <FadeIn className="contact-info">
-            {contactInfo.map((item) => (
-              <div key={item.title} className="contact-item">
-                <div className="icon">{item.icon}</div>
-                <div>
-                  <h4>{item.title}</h4>
-                  <p>{item.content}</p>
+            {contactInfo.map((item) =>
+              item.title === "门店地址" ? (
+                <div key={item.title} className="contact-item contact-item--address">
+                  <div className="contact-item-header">
+                    <div className="icon">{item.icon}</div>
+                    <div>
+                      <h4>{item.title}</h4>
+                      <p>{item.content}</p>
+                    </div>
+                  </div>
+                  <StoreMap />
                 </div>
-              </div>
-            ))}
+              ) : (
+                <div key={item.title} className="contact-item">
+                  <div className="icon">{item.icon}</div>
+                  <div>
+                    <h4>{item.title}</h4>
+                    <p>{item.content}</p>
+                  </div>
+                </div>
+              ),
+            )}
           </FadeIn>
           <FadeIn className="contact-form">
             {!submitted ? (

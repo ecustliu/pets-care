@@ -144,8 +144,14 @@ export const reviews = [
   },
 ] as const;
 
+export const storeLocation = {
+  address: "上海市长宁区金钟路960号",
+  lat: 31.2212,
+  lng: 121.3508,
+} as const;
+
 export const contactInfo = [
-  { icon: "📍", title: "门店地址", content: "北京市朝阳区宠物友好街 88 号 PawCare 旗舰店" },
+  { icon: "📍", title: "门店地址", content: storeLocation.address },
   { icon: "📞", title: "联系电话", content: "400-888-6666（每日 9:00 - 21:00）" },
   { icon: "💬", title: "微信咨询", content: "PawCare888 · 扫码添加客服微信" },
   { icon: "🕐", title: "营业时间", content: "周一至周日 9:00 - 21:00（节假日正常营业）" },
